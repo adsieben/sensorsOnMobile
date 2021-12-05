@@ -1,0 +1,290 @@
+<!-- https://sensor-js.xyz/demo.html -->
+<!-- https://intel.github.io/generic-sensor-demos/ -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style type="text/css">
+            body {
+              padding: 0;
+              margin: 0;
+            }
+
+            svg:not(:root) {
+              display: block;
+            }
+
+            .playable-code {
+              background-color: #f4f7f8;
+              border: none;
+              border-left: 6px solid #558abb;
+              border-width: medium medium medium 6px;
+              color: #4d4e53;
+              height: 100px;
+              width: 90%;
+              padding: 10px 10px 0;
+            }
+
+            .playable-canvas {
+              border: 1px solid #4d4e53;
+              border-radius: 2px;
+            }
+
+            .playable-buttons {
+              text-align: right;
+              width: 90%;
+              padding: 5px 10px 5px 26px;
+            }
+        </style>
+
+        <style type="text/css">
+            .garden {
+  position: relative;
+  width: 90vw;
+  height: 90vw;
+/*   width : 200px; */
+/*   height: 200px; */
+  border: 5px solid #CCC;
+  border-radius: 10px;
+}
+
+.ball {
+  position: absolute;
+  top   : 45vw;
+  left  : 45vw;
+  width : 20vw;
+  height: 20vw;
+/*   top   : 90px; */
+/*   left  : 90px; */
+/*   width : 20px; */
+/*   height: 20px; */
+  background: green;
+  border-radius: 100%;
+}
+
+        .output {
+          font-size:20px;
+
+        }
+        </style>
+
+        <title>Detecting device orientation - Orientation_example - code sample</title>
+    </head>
+    <body>
+
+            <div class="garden">
+  <div class="ball"></div>
+</div>
+
+<pre class="output"></pre>
+
+<meter id="meter_1" name="meter_1" value="0" min="-100" max="100" style="width:90vw;"></meter><br>
+<meter id="meter_2" name="meter_2" value="0" min="-100" max="100" style="width:90vw;"></meter><br>
+<meter id="meter_3" name="meter_3" value="0" min="-100" max="100" style="width:90vw;"></meter><br>
+<meter id="meter_4" name="meter_4" value="0" min="-100" max="100" style="width:90vw;"></meter><br>
+<button type="button" onclick="clickButton()" >Click Me!</button>
+
+<script>
+var ball   = document.querySelector('.ball');
+var garden = document.querySelector('.garden');
+var output = document.querySelector('.output');
+var m1 = document.getElementById('meter_1');
+var m2 = document.getElementById('meter_2');
+var m3 = document.getElementById('meter_3');
+var m4 = document.getElementById('meter_4');
+
+let vx = 0;
+let vy = 0;
+let vz = 0;
+let lastTimeStamp = Date.now();
+
+var maxX = garden.clientWidth  - ball.clientWidth;
+var maxY = garden.clientHeight - ball.clientHeight;
+
+function handleOrientation(event) {
+  var x = event.beta;  // In degree in the range [-180,180)
+  var y = event.gamma; // In degree in the range [-90,90)
+
+//   output.textContent  = `beta : ${x}\n`;
+//   output.textContent += `gamma: ${y}\n`;
+
+  // Because we don't want to have the device upside down
+  // We constrain the x value to the range [-90,90]
+  if (x >  90) { x =  90};
+  if (x < -90) { x = -90};
+
+  // To make computation easier we shift the range of
+  // x and y to [0,180]
+  x += 90;
+  y += 90;
+
+  // 10 is half the size of the ball
+  // It center the positioning point to the center of the ball
+  ball.style.top  = (maxY*y/180 - 10) + "px";
+  ball.style.left = (maxX*x/180 - 10) + "px";
+}
+
+// window.addEventListener('deviceorientation', handleOrientation);
+
+const options = { frequency: 60, referenceFrame: 'device' };
+
+function clickButton() {
+  vx = 0;
+  vy = 0;
+  vz = 0;
+}
+
+let gravitySensor = new GravitySensor({frequency: 60});
+
+gravitySensor.addEventListener("reading", e => {
+   m1.value = gravitySensor.x*10;
+   m2.value = gravitySensor.y*10;
+   m3.value = gravitySensor.z*10;
+   output.textContent  = "Grav.x "+gravitySensor.x.toFixed(3) + "\n";
+   output.textContent += "Grav.y "+gravitySensor.y.toFixed(3) + "\n";
+   output.textContent += "Grav.z "+gravitySensor.z.toFixed(3) ;
+});
+
+// gravitySensor.start();
+
+let aclSensor = new Accelerometer({frequency: 60});
+aclSensor.addEventListener('reading', () => {
+   m1.value = aclSensor.x*10;
+   m2.value = aclSensor.y*10;
+   m3.value = aclSensor.z*10;
+   output.textContent  = "Acl.x "+ aclSensor.x.toFixed(3) + "\n";
+   output.textContent += "Acl.y "+ aclSensor.y.toFixed(3) + "\n";
+   output.textContent += "Acl.z "+ aclSensor.z.toFixed(3);
+});
+
+// aclSensor.start();
+
+let laSensor = new LinearAccelerationSensor({frequency: 50});
+
+// laSensor.addEventListener('reading', e => {
+//    m1.value = laSensor.x*10;
+//    m2.value = laSensor.y*10;
+//    m3.value = laSensor.z*10;
+//    output.textContent =  "linAcl.x "+ laSensor.x.toFixed(3) + "\n";
+//    output.textContent += "linAcl.y "+ laSensor.y.toFixed(3) + "\n";
+//    output.textContent += "linAcl.z "+ laSensor.z.toFixed(3) ;
+// });
+
+laSensor.addEventListener('reading', e => {
+//    const sx =
+//    const sx =
+//    const sx =
+   const dt = laSensor.timestamp - lastTimeStamp
+//    laxa.push( [ (-+dt).toFixed( 2 ) , laSensor.timestamp.toFixed( 1 ), laSensor.x.toFixed(3), laSensor.y.toFixed(3), laSensor.y.toFixed(3) ] );
+   vx += laSensor.x * ( dt );
+   vy += laSensor.y * ( dt );
+   vz += laSensor.z * ( dt );
+// //    output.textContent = "speed  " + ( Date.now() - lastTimeStamp ) + "\n";
+// //    output.textContent = "speed  " + ( laSensor.timestamp - lastTimeStamp ) + "\n";
+   lastTimeStamp = laSensor.timestamp;//Date.now();
+   m1.value = laSensor.x*10;
+   m2.value = laSensor.y*10;
+   m3.value = laSensor.z*10;
+// //    m4.value = lastTimeStamp;
+// //    m4.value = Math.sqrt( Math.pow( vx, 2 ) + Math.pow( vy, 2 ) + Math.pow( vz, 2 ) );
+   output.textContent =  "linAcl.x "+ laSensor.x.toFixed(3) + "\n";
+   output.textContent += "linAcl.y "+ laSensor.y.toFixed(3) + "\n";
+   output.textContent += "linAcl.z "+ laSensor.z.toFixed(3) + "\n";
+   output.textContent += "speed  "+ vx.toFixed(3) + "\n";
+   output.textContent += "speed  "+ vy.toFixed(3) + "\n";
+   output.textContent += "speed  "+ vz.toFixed(3) + "\n";
+// //    output.textContent += "speed  "+ Math.sqrt( Math.pow( vx, 2 ) + Math.pow( vy, 2 ) + Math.pow( vz, 2 ) ).toFixed(3) ;
+  ball.style.top  = (vy*40/500+42.5) + "vw";
+  ball.style.left = (vx*40/500+42.5) + "vw";
+
+});
+
+laSensor.start();
+
+let gyroscope = new Gyroscope({frequency: 60});
+
+gyroscope.addEventListener('reading', e => {
+   output.textContent =  "gyr.x "+ gyroscope.x.toFixed(3) + "\n";
+   output.textContent += "gyr.y "+ gyroscope.y.toFixed(3) + "\n";
+   output.textContent += "gyr.z "+ gyroscope.z.toFixed(3) ;
+ });
+// gyroscope.start();
+
+let xx=0;
+
+// const options = { frequency: 60, referenceFrame: 'device' };
+const relOrientsensor = new RelativeOrientationSensor(options);
+
+relOrientsensor.addEventListener('reading', () => {
+   output.textContent =  "ros.x "+ relOrientsensor.quaternion[0].toFixed(3) + "\n";
+   output.textContent += "ros.y "+ relOrientsensor.quaternion[1].toFixed(3) + "\n";
+   output.textContent += "ros.z "+ relOrientsensor.quaternion[2].toFixed(3) + "\n";
+   output.textContent += "ros.d "+ relOrientsensor.quaternion[3].toFixed(3) + "\n";
+   output.textContent += "Abs x"+sensorAbs.quaternion[0].toFixed(3) + "\n";
+   output.textContent += "Abs y"+sensorAbs.quaternion[1].toFixed(3) + "\n";
+   output.textContent += "Abs z"+sensorAbs.quaternion[2].toFixed(3) + "\n";
+   output.textContent += "Abs d"+sensorAbs.quaternion[3].toFixed(3) + "\n";
+//   // model is a Three.js object instantiated elsewhere.
+//   model.quaternion.fromArray(sensor.quaternion).inverse();
+});
+relOrientsensor.addEventListener('error', error => {
+  if (event.error.name == 'NotReadableError') {
+    console.log("Sensor is not available.");
+  }
+});
+
+// relOrientsensor.start();
+
+const sensorAbs = new AbsoluteOrientationSensor(options);
+// const sensorAbs = new RelativeOrientationSensor(options);
+// sensorAbs.addEventListener('reading', e => {
+// //   console.log("Magnetic field along the X-axis " + x);
+// //   console.log("Magnetic field along the Y-axis " + y);
+// //   console.log("Magnetic field along the Z-axis " + z);
+// //   output.textContent  = `x : ${e.x}\n`;
+// //   output.textContent += `y : ${y}\n`;
+// //   output.textContent += `z : ${z}\n`;
+//    output.textContent  = "Abs x"+sensorAbs.quaternion[0].toFixed(3) + "\n";
+//    output.textContent += "Abs y"+sensorAbs.quaternion[1].toFixed(3) + "\n";
+//    output.textContent += "Abs z"+sensorAbs.quaternion[2].toFixed(3) + "\n";
+//    output.textContent += "Abs d"+sensorAbs.quaternion[3].toFixed(3) + "\n";
+// try {
+// //    let a = new Float64Array(16);
+// // //    for( i = 0; i<16; i++ ) a[i]=0;
+// // //    output.textContent += "Abs a"+a[0];
+// //    sensorAbs.populateMatrix(a);
+// //    output.textContent += "Abs a"+a[0].toFixed(3);
+// } catch (error) {
+//   output.textContent += error;
+//   // expected output: ReferenceError: nonExistentFunction is not defined
+//   // Note - error messages will vary depending on browser
+// }
+// })
+
+sensorAbs.addEventListener('error', event => {
+  console.log(event.error.name, event.error.message);
+  output.textContent  = event.error.name + " " + event.error.message;
+})
+
+Promise.all([navigator.permissions.query({ name: "accelerometer" }),
+             navigator.permissions.query({ name: "magnetometer" }),
+             navigator.permissions.query({ name: "gyroscope" })])
+       .then(results => {
+         if (results.every(result => result.state === "granted")) {
+   output.textContent = "ja";
+//            sensorAbs.start();
+         } else {
+   output.textContent = "no";
+           console.log("No permissions to use AbsoluteOrientationSensor.");
+         }
+   });
+// sensor.start();
+
+
+</script>
+
+    </body>
+</html>
