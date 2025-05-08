@@ -473,7 +473,7 @@ ctx.clearRect(0, 0, xMax, yMax );
 
 function sensorListClick() {
   const iinterval = setInterval( upDateScreen, 100 );
-  sensorList.textContent = "we start soon";
+  sensorList.textContent = "we start soon ";
   
   const sensorNames = [
     'Accelerometer',
@@ -489,18 +489,18 @@ function sensorListClick() {
   let s = "";
 
   for ( let s in sensorNames ) {
-      if ( s in window) {
+      if ( sensorNames[ s ] in window) {
         // The `Accelerometer` interface is supported by the browser.
         // Does the device have an accelerometer, though?
-        sensorList.textContent += s + "\n"
+        sensorList.textContent += sensorNames[ s ] + " "
       }
   }
 
-  if ( 'Accelerometer' in window) {
-    // The `Accelerometer` interface is supported by the browser.
-    // Does the device have an accelerometer, though?
-    sensorList.textContent += 'Accelerometer.' + "\n"
-  }
+  // if ( 'Accelerometer' in window) {
+  //   // The `Accelerometer` interface is supported by the browser.
+  //   // Does the device have an accelerometer, though?
+  //   sensorList.textContent += 'Accelerometer.' + " "
+  // }
 
 
 }
