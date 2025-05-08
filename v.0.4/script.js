@@ -474,8 +474,8 @@ ctx.clearRect(0, 0, xMax, yMax );
 function sensorListClick() {
   const iinterval = setInterval( upDateScreen, 100 );
   sensorList.textContent = "we start soon";
-
-  for ( let s in [
+  
+  const sensorNames = [
     'Accelerometer',
     'Gyroscope',
     'LinearAccelerationSensor',
@@ -485,7 +485,10 @@ function sensorListClick() {
     'Environmental',
     'AmbientLightSensor',
     'Magnetometer'
-    ] ) {
+    ]
+  let s = "";
+
+  for ( let s in sensorNames ) {
       if ( s in window) {
         // The `Accelerometer` interface is supported by the browser.
         // Does the device have an accelerometer, though?
