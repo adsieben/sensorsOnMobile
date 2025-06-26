@@ -12,6 +12,12 @@ ctx.clearRect(0, 0, xMax, yMax );
 //   ctx.stroke();
 }
 
+function gardenClick() {
+  vx = 0;
+  vy = 0;
+  vz = 0;
+}
+
 function sensorListClick() {
   sensorList.textContent = "we start soon ";
   
@@ -47,10 +53,18 @@ function sensorListClick() {
 
 function upDateScreen() {
   output.textContent =  "length la: " + laxa.length + "rel: " + roa.length + "abs: " + aoa.length + "\n";
-  while( laxa.length > 3 ){
-  //     sleep
-  //     output.textContent += laxa.shift() + "\n";
-    laxa.shift();
+  if( laxa.length > 0 ){
+    //linear acceleration worked
+    m4.value = vx.toFixed(3);
+    m5.value = vy.toFixed(3);
+    m6.value = vz.toFixed(3);
+    m7.value = Math.sqrt( Math.pow( vx, 2 ) + Math.pow( vy, 2 ) + Math.pow( vz, 2 ) );
+    ball.style.top  = (vy*40/500+42.5) + "vw";
+    ball.style.left = (vx*40/500+42.5) + "vw";
+    while( laxa.length > 0 ){
+      laxa.shift();
+    }
+    output.textContent += "vx: " + vx + "vy: " + vy + "vz: " + vz;
   }
   //   output.textContent = "llenght " + laxa.lenght;
   while( roa.length > 3 ){
@@ -64,7 +78,23 @@ function upDateScreen() {
   //     output.textContent += aoa.shift() + "\n";
     aoa.shift();
   }
-  
+
+  // if( gyroscope != null ){
+  if( gyroscope.activated ){
+    let ln = gyroscpopeValues[0].length;
+    output.textContent += "gyroscope lenght = " + ln;
+    const vh = [m1,m2,m3];
+    for ( let el in vh ){
+      vh[el].value = 0;
+      while( gyroscpopeValues[ el ].length > 0 ){
+        vh[el].value += gyroscpopeValues[el].pop() * 10;
+      }
+      vh[el].value /= ln;
+    }
+  }else{
+    output.textContent += "no gyro";
+  }
+
   ctx.clearRect(0, 0, xMax, yMax );
   // if( sensorAbs != null ){
   if( sensorAbs.activated ){

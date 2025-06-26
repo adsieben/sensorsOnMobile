@@ -6,8 +6,16 @@ var m1 = document.getElementById('meter_1');
 var m2 = document.getElementById('meter_2');
 var m3 = document.getElementById('meter_3');
 var m4 = document.getElementById('meter_4');
+var m5 = document.getElementById('meter_5');
+var m6 = document.getElementById('meter_6');
+var m7 = document.getElementById('meter_7');
 var em = document.getElementById("errorMessages");
 
+let gyroscopeX = new Array;
+let gyroscopeY = new Array;
+let gyroscopeZ = new Array;
+
+const gyroscpopeValues = [  [], [], [] ];
 
 var maxX = garden.clientWidth  - ball.clientWidth;
 var maxY = garden.clientHeight - ball.clientHeight;
@@ -174,6 +182,7 @@ class cQuaternion {
 // gravitySensor.start();
     
 // let aclSensor = new Accelerometer(options);//({frequency: 60});
+// //accelerometer with gravity
 // aclSensor.addEventListener('reading', () => {
 //   m1.value = aclSensor.x*10;
 //   m2.value = aclSensor.y*10;
@@ -193,136 +202,139 @@ class cQuaternion {
 // } );
 // aclSensor.start();
 
-// let laSensor = new LinearAccelerationSensor(options);//({frequency: 60});
-// laSensor.addEventListener('reading', e => {
-//   //    const sx =
-//   //    const sx =
-//   //    const sx =
-//   const dt = laSensor.timestamp - lastTimeStamp
-//   //  laxa.push( [ (dt).toFixed( 2 ) , laSensor.timestamp.toFixed( 1 ), laSensor.x.toFixed(3), laSensor.y.toFixed(3), laSensor.y.toFixed(3) ] );
-//   laxa.push( [ (dt).toFixed( 2 ) , laSensor.timestamp.toFixed( 1 ), laSensor.x.toFixed(3), laSensor.y.toFixed(3), laSensor.z.toFixed(3) ] );
-//   lastTimeStamp = laSensor.timestamp;//Date.now();
-//   // //    output.textContent = "speed  " + ( Date.now() - lastTimeStamp ) + "\n";
-//   // //    output.textContent = "speed  " + ( laSensor.timestamp - lastTimeStamp ) + "\n";
-//   //    vx += laSensor.x * ( dt );
-//   //    vy += laSensor.y * ( dt );
-//   //    vz += laSensor.z * ( dt );
-//   //    m1.value = laSensor.x*10;
-//   //    m2.value = laSensor.y*10;
-//   //    m3.value = laSensor.z*10;
-//   // //    m4.value = lastTimeStamp;
-//   // //    m4.value = Math.sqrt( Math.pow( vx, 2 ) + Math.pow( vy, 2 ) + Math.pow( vz, 2 ) );
-//   //    output.textContent =  "linAcl.x "+ laSensor.x.toFixed(3) + "\n";
-//   //    output.textContent += "linAcl.y "+ laSensor.y.toFixed(3) + "\n";
-//   //    output.textContent += "linAcl.z "+ laSensor.z.toFixed(3) + "\n";
-//   //    output.textContent += "speed  "+ vx.toFixed(3) + "\n";
-//   //    output.textContent += "speed  "+ vy.toFixed(3) + "\n";
-//   //    output.textContent += "speed  "+ vz.toFixed(3) + "\n";
-//   // //    output.textContent += "speed  "+ Math.sqrt( Math.pow( vx, 2 ) + Math.pow( vy, 2 ) + Math.pow( vz, 2 ) ).toFixed(3) ;
-//   //   ball.style.top  = (vy*40/500+42.5) + "vw";
-//   //   ball.style.left = (vx*40/500+42.5) + "vw";
-// });
-// laSensor.addEventListener("error", (event) => {
-//   // Handle runtime errors.
-//   if (event.error.name === "NotAllowedError") {
-//     // Branch to code for requesting permission.
-//   } else if (event.error.name === "NotReadableError") {
-//     console.log("Cannot connect to LinearAcceleration.");
-//     em.textContent += "no LinearAcceleration ";
-//   }
-// } );
-// // laSensor.start();
+let laSensor = new LinearAccelerationSensor(options);//({frequency: 60});
+//accelerometer without gravity
+laSensor.addEventListener('reading', e => {
+  //    const sx =
+  //    const sx =
+  //    const sx =
+  const dt = laSensor.timestamp - lastTimeStamp
+  // laxa.push( [ (dt).toFixed( 2 ) , laSensor.timestamp.toFixed( 1 ), laSensor.x.toFixed(3), laSensor.y.toFixed(3), laSensor.z.toFixed(3) ] );
+  laxa.push( [ laSensor.x.toFixed(3), laSensor.y.toFixed(3), laSensor.z.toFixed(3) ] );
+  lastTimeStamp = laSensor.timestamp;//Date.now();
+  // //    output.textContent = "speed  " + ( Date.now() - lastTimeStamp ) + "\n";
+  // //    output.textContent = "speed  " + ( laSensor.timestamp - lastTimeStamp ) + "\n";
+  vx += laSensor.x * ( dt );
+  vy += laSensor.y * ( dt );
+  vz += laSensor.z * ( dt );
+  //    m1.value = laSensor.x*10;
+  //    m2.value = laSensor.y*10;
+  //    m3.value = laSensor.z*10;
+  // //    m4.value = lastTimeStamp;
+  // //    m4.value = Math.sqrt( Math.pow( vx, 2 ) + Math.pow( vy, 2 ) + Math.pow( vz, 2 ) );
+  //    output.textContent =  "linAcl.x "+ laSensor.x.toFixed(3) + "\n";
+  //    output.textContent += "linAcl.y "+ laSensor.y.toFixed(3) + "\n";
+  //    output.textContent += "linAcl.z "+ laSensor.z.toFixed(3) + "\n";
+  //    output.textContent += "speed  "+ vx.toFixed(3) + "\n";
+  //    output.textContent += "speed  "+ vy.toFixed(3) + "\n";
+  //    output.textContent += "speed  "+ vz.toFixed(3) + "\n";
+  // //    output.textContent += "speed  "+ Math.sqrt( Math.pow( vx, 2 ) + Math.pow( vy, 2 ) + Math.pow( vz, 2 ) ).toFixed(3) ;
+  //   ball.style.top  = (vy*40/500+42.5) + "vw";
+  //   ball.style.left = (vx*40/500+42.5) + "vw";
+});
+laSensor.addEventListener("error", (event) => {
+  // Handle runtime errors.
+  if (event.error.name === "NotAllowedError") {
+    // Branch to code for requesting permission.
+  } else if (event.error.name === "NotReadableError") {
+    console.log("Cannot connect to LinearAcceleration.");
+    em.textContent += "no LinearAcceleration ";
+  }
+} );
+laSensor.start();
 
-// let gyroscope = new Gyroscope(options);//({frequency: 60});
-// gyroscope.addEventListener('reading', e => {
-//   output.textContent =  "gyr.x "+ gyroscope.x.toFixed(3) + "\n";
-//   output.textContent += "gyr.y "+ gyroscope.y.toFixed(3) + "\n";
-//   output.textContent += "gyr.z "+ gyroscope.z.toFixed(3) ;
-// });
-// gyroscope.addEventListener("error", (event) => {
-//   // Handle runtime errors.
-//   if (event.error.name === "NotAllowedError") {
-//     // Branch to code for requesting permission.
-//   } else if (event.error.name === "NotReadableError") {
-//     console.log("Cannot connect to the Gyroscope.");
-//     em.textContent += "no Gyroscope ";
-//   }
-// } );
-// // gyroscope.start();
+let gyroscope = new Gyroscope(options);//({frequency: 60});
+gyroscope.addEventListener('reading', e => {
+  gyroscpopeValues[0].push( gyroscope.x );
+  gyroscpopeValues[1].push( gyroscope.y );
+  gyroscpopeValues[2].push( gyroscope.z );
+});
+gyroscope.addEventListener("error", (event) => {
+  // Handle runtime errors.
+  if (event.error.name === "NotAllowedError") {
+    // Branch to code for requesting permission.
+    em.textContent += "no Gyroscope allowd";
+  } else if (event.error.name === "NotReadableError") {
+    console.log("Cannot connect to the Gyroscope.");
+    em.textContent += "no Gyroscope ";
+  }
+} );
+gyroscope.start();
 
 // const options = { frequency: 60, referenceFrame: 'device' };
+
 const relOrientsensor = new RelativeOrientationSensor({ frequency: 60, referenceFrame: 'screen' });//options);
-relOrientsensor.addEventListener('reading', () => {
-  const dt = relOrientsensor.timestamp - lastTimeStamp
-  roa.push( [ (dt).toFixed( 2 ) , relOrientsensor.timestamp.toFixed( 1 )
-    , relOrientsensor.quaternion[0], relOrientsensor.quaternion[1], relOrientsensor.quaternion[2], relOrientsensor.quaternion[3] ] );
-  lastTimeStamp = relOrientsensor.timestamp;//Date.now();
-// //    output.textContent =  "ros.x "+ relOrientsensor.quaternion[0].toFixed(3) + "\n";
-// //    output.textContent += "ros.y "+ relOrientsensor.quaternion[1].toFixed(3) + "\n";
-// //    output.textContent += "ros.z "+ relOrientsensor.quaternion[2].toFixed(3) + "\n";
-// //    output.textContent += "ros.d "+ relOrientsensor.quaternion[3].toFixed(3) + "\n";
-// //    output.textContent += "Abs x"+sensorAbs.quaternion[0].toFixed(3) + "\n";
-// //    output.textContent += "Abs y"+sensorAbs.quaternion[1].toFixed(3) + "\n";
-// //    output.textContent += "Abs z"+sensorAbs.quaternion[2].toFixed(3) + "\n";
-// //    output.textContent += "Abs d"+sensorAbs.quaternion[3].toFixed(3) + "\n";
-// // //   // model is a Three.js object instantiated elsewhere.
-// // //   model.quaternion.fromArray(sensor.quaternion).inverse();
-});
-relOrientsensor.addEventListener('error', (event) => {
-if (event.error.name == 'NotReadableError') {
-  console.log("RelativeOrientationSensor is not available.");
-  em.textContent += "no RelativeOrientationSensor ";
-}
-});
-relOrientsensor.start();
+// relOrientsensor.addEventListener('reading', () => {
+//   const dt = relOrientsensor.timestamp - lastTimeStamp
+//   roa.push( [ (dt).toFixed( 2 ) , relOrientsensor.timestamp.toFixed( 1 )
+//     , relOrientsensor.quaternion[0], relOrientsensor.quaternion[1], relOrientsensor.quaternion[2], relOrientsensor.quaternion[3] ] );
+//   lastTimeStamp = relOrientsensor.timestamp;//Date.now();
+// // //    output.textContent =  "ros.x "+ relOrientsensor.quaternion[0].toFixed(3) + "\n";
+// // //    output.textContent += "ros.y "+ relOrientsensor.quaternion[1].toFixed(3) + "\n";
+// // //    output.textContent += "ros.z "+ relOrientsensor.quaternion[2].toFixed(3) + "\n";
+// // //    output.textContent += "ros.d "+ relOrientsensor.quaternion[3].toFixed(3) + "\n";
+// // //    output.textContent += "Abs x"+sensorAbs.quaternion[0].toFixed(3) + "\n";
+// // //    output.textContent += "Abs y"+sensorAbs.quaternion[1].toFixed(3) + "\n";
+// // //    output.textContent += "Abs z"+sensorAbs.quaternion[2].toFixed(3) + "\n";
+// // //    output.textContent += "Abs d"+sensorAbs.quaternion[3].toFixed(3) + "\n";
+// // // //   // model is a Three.js object instantiated elsewhere.
+// // // //   model.quaternion.fromArray(sensor.quaternion).inverse();
+// });
+// relOrientsensor.addEventListener('error', (event) => {
+// if (event.error.name == 'NotReadableError') {
+//   console.log("RelativeOrientationSensor is not available.");
+//   em.textContent += "no RelativeOrientationSensor ";
+// }
+// });
+// relOrientsensor.start();
     
 const sensorAbs = new AbsoluteOrientationSensor(options);
-sensorAbs.addEventListener('reading', e => {
- const dt = sensorAbs.timestamp - lastTimeStamp
- aoa.push( [ (dt).toFixed( 2 ) , sensorAbs.timestamp.toFixed( 1 )
-   , sensorAbs.quaternion[0], sensorAbs.quaternion[1], sensorAbs.quaternion[2], sensorAbs.quaternion[3] ] );
- lastTimeStamp = relOrientsensor.timestamp;//Date.now();
-// // //   console.log("Magnetic field along the X-axis " + x);
-// // //   console.log("Magnetic field along the Y-axis " + y);
-// // //   console.log("Magnetic field along the Z-axis " + z);
-// // //   output.textContent  = `x : ${e.x}\n`;
-// // //   output.textContent += `y : ${y}\n`;
-// // //   output.textContent += `z : ${z}\n`;
-// //    output.textContent  = "Abs x"+sensorAbs.quaternion[0].toFixed(3) + "\n";
-// //    output.textContent += "Abs y"+sensorAbs.quaternion[1].toFixed(3) + "\n";
-// //    output.textContent += "Abs z"+sensorAbs.quaternion[2].toFixed(3) + "\n";
-// //    output.textContent += "Abs d"+sensorAbs.quaternion[3].toFixed(3) + "\n";
-// // try {
-// //    let a = new Float64Array(16);
-// // //    for( i = 0; i<16; i++ ) a[i]=0;
-// // //    output.textContent += "Abs a"+a[0];
-// //    sensorAbs.populateMatrix(a);
-// //    output.textContent += "Abs a"+a[0].toFixed(3);
-// // } catch (error) {
-// //   output.textContent += error;
-// //   // expected output: ReferenceError: nonExistentFunction is not defined
-// //   // Note - error messages will vary depending on browser
-// // }
-})
+// sensorAbs.addEventListener('reading', e => {
+//  const dt = sensorAbs.timestamp - lastTimeStamp
+//  aoa.push( [ (dt).toFixed( 2 ) , sensorAbs.timestamp.toFixed( 1 )
+//    , sensorAbs.quaternion[0], sensorAbs.quaternion[1], sensorAbs.quaternion[2], sensorAbs.quaternion[3] ] );
+//  lastTimeStamp = relOrientsensor.timestamp;//Date.now();
+// // // //   console.log("Magnetic field along the X-axis " + x);
+// // // //   console.log("Magnetic field along the Y-axis " + y);
+// // // //   console.log("Magnetic field along the Z-axis " + z);
+// // // //   output.textContent  = `x : ${e.x}\n`;
+// // // //   output.textContent += `y : ${y}\n`;
+// // // //   output.textContent += `z : ${z}\n`;
+// // //    output.textContent  = "Abs x"+sensorAbs.quaternion[0].toFixed(3) + "\n";
+// // //    output.textContent += "Abs y"+sensorAbs.quaternion[1].toFixed(3) + "\n";
+// // //    output.textContent += "Abs z"+sensorAbs.quaternion[2].toFixed(3) + "\n";
+// // //    output.textContent += "Abs d"+sensorAbs.quaternion[3].toFixed(3) + "\n";
+// // // try {
+// // //    let a = new Float64Array(16);
+// // // //    for( i = 0; i<16; i++ ) a[i]=0;
+// // // //    output.textContent += "Abs a"+a[0];
+// // //    sensorAbs.populateMatrix(a);
+// // //    output.textContent += "Abs a"+a[0].toFixed(3);
+// // // } catch (error) {
+// // //   output.textContent += error;
+// // //   // expected output: ReferenceError: nonExistentFunction is not defined
+// // //   // Note - error messages will vary depending on browser
+// // // }
+// })
 
-sensorAbs.addEventListener('error', event => {
-  console.log(event.error.name, event.error.message);
-  em.textContent += event.error.name + " " + event.error.message;
-  em.textContent += "no AbsoluteOrientationSensor ";
-})
+// sensorAbs.addEventListener('error', event => {
+//   console.log(event.error.name, event.error.message);
+//   em.textContent += event.error.name + " " + event.error.message;
+//   em.textContent += "no AbsoluteOrientationSensor ";
+// })
 
-Promise.all([navigator.permissions.query({ name: "accelerometer" }),
-           navigator.permissions.query({ name: "magnetometer" }),
-           navigator.permissions.query({ name: "gyroscope" })])
-       .then(results => {
-          if (results.every(result => result.state === "granted")) {
-            em.textContent += "yes, AbsoluteOrientationSensor should work.";
-            //  sensorAbs.start();
-          } else {
-            em.textContent = "no, AbsoluteOrientationSensor cannot work.";
-            console.log("No permissions to use AbsoluteOrientationSensor.");
-          }
-          });
+// Promise.all([navigator.permissions.query({ name: "accelerometer" }),
+//            navigator.permissions.query({ name: "magnetometer" }),
+//            navigator.permissions.query({ name: "gyroscope" })])
+//        .then(results => {
+//           if (results.every(result => result.state === "granted")) {
+//             em.textContent += "yes, AbsoluteOrientationSensor should work.";
+//             //  sensorAbs.start();
+//           } else {
+//             em.textContent = "no, AbsoluteOrientationSensor cannot work.";
+//             console.log("No permissions to use AbsoluteOrientationSensor.");
+//           }
+//           });
 // sensorAbs.start();
     
 class GravitySensory extends EventTarget {
